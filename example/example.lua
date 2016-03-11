@@ -1,4 +1,4 @@
-local accumulate = require "accumulate"
+local accumulate = require "resty.batch.accumulate"
 local f = accumulate.new(3, 10.0, function(tasks)
     print("Start calculations")
     ngx.sleep(3.0)
