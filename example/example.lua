@@ -1,5 +1,5 @@
-local accumulate = require "resty.batch.accumulate"
-local f = accumulate.new(3, 10.0, function(tasks)
+local accumulator = require "resty.batch.accumulator"
+local f = accumulator.new(3, 10.0, function(tasks)
     print("Start calculations")
     ngx.sleep(3.0)
     local result = {}

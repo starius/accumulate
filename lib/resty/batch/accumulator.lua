@@ -1,8 +1,8 @@
-local accumulate = {}
+local accumulator = {}
 
 local LARGE_TIMEOUT = 1000.0
 
-function accumulate.new(max_size, timeout, func)
+function accumulator.new(max_size, timeout, func)
 
     local ngx = require "ngx"
     local semaphore = require "ngx.semaphore"
@@ -50,4 +50,4 @@ function accumulate.new(max_size, timeout, func)
     return wrapper
 end
 
-return accumulate
+return accumulator
