@@ -31,6 +31,7 @@ function accumulator.new(max_size, timeout, func)
     end
 
     local function wrapper(task)
+        assert(task ~= nil)
         local state = state0
         table.insert(state.tasks, task)
         local index = #state.tasks
