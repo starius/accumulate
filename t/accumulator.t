@@ -12,7 +12,7 @@ run_tests();
 
 __DATA__
 
-=== TEST 1: resty.batch.accumulator
+=== TEST 1: reply to single request after timeout
 --- http_config eval: $::HttpConfig
 --- config
 lua_code_cache on;
