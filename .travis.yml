@@ -1,0 +1,23 @@
+sudo: required
+
+# modern perl
+# https://travis-ci.org/starius/lua-resty-batch/builds/115675673#L3473
+dist: trusty
+
+before_install:
+  - wget https://openresty.org/download/ngx_openresty-1.9.7.2.tar.gz
+  - tar -xzf ngx_openresty-1.9.7.2.tar.gz
+  - cd ngx_openresty-1.9.7.2
+  - ./configure
+  - make
+  - sudo make install
+  - cd ..
+
+  - sudo PERL_MM_USE_DEFAULT=1 cpan Test::Nginx
+
+install:
+  - echo "TODO. No installation"
+
+script:
+  - export PATH=/usr/local/openresty/nginx/sbin:$PATH
+  - prove
