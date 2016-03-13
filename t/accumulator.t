@@ -18,18 +18,18 @@ __DATA__
 lua_code_cache on;
 
 location /t {
-  default_type text/html;
-  content_by_lua_block {
-    if not package.loaded.accumulator_func then
-        local accumulator = require "resty.batch.accumulator"
-        local f = accumulator.new(3, 0.2, function(tasks)
-            return tasks
-        end)
-        package.loaded.accumulator_func = f
-    end
-    local input = ngx.req.get_uri_args().input
-    ngx.say(package.loaded.accumulator_func(input))
-  }
+    default_type text/html;
+    content_by_lua_block {
+        if not package.loaded.accumulator_func then
+            local accumulator = require "resty.batch.accumulator"
+            local f = accumulator.new(3, 0.2, function(tasks)
+                return tasks
+            end)
+            package.loaded.accumulator_func = f
+        end
+        local input = ngx.req.get_uri_args().input
+        ngx.say(package.loaded.accumulator_func(input))
+    }
 }
 --- request
 GET /t?input=foo
