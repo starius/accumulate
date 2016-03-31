@@ -89,3 +89,43 @@ GET /t2
 --- error_code: 500
 --- error_log
 failed to receive: timeout
+
+=== TEST 4: reply before timeout if batch is full
+--- http_config eval: $::HttpConfig
+--- config
+lua_code_cache on;
+listen 22318;
+location /t {
+    default_type text/html;
+    content_by_lua_block {
+        local f = package.loaded.accumulator_func
+        if not f then
+            local accumulator = require "resty.batch.accumulator"
+            f = accumulator.new(2, 0.5, function(tasks)
+                return tasks
+            end)
+            package.loaded.accumulator_func = f
+        end
+        local input = ngx.req.get_uri_args().input
+        ngx.say(f(input))
+    }
+}
+location /t2 {
+    content_by_lua_block {
+        local function ask_t()
+            local sock = ngx.socket.tcp()
+            sock:settimeout(100)
+            assert(sock:connect("127.0.0.1", 22318))
+            assert(sock:send("GET /t?input=foo HTTP/1.1\r\n" ..
+                "Host: 127.0.0.1\r\n\r\n"))
+            local ok, err = assert(sock:receive(10))
+        end
+        --local co1 = ngx.thread.spawn(ask_t)
+        --local co2 = ngx.thread.spawn(ask_t)
+        --ngx.thread.wait(co1, co2)
+        ask_t()
+    }
+}
+--- request
+GET /t2
+--- error_code: 200
